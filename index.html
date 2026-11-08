@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#171528">
+<meta name="description" content="A simple offline-first notes app.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<title>NoteNest</title>
+<style>
+:root{color-scheme:dark;--bg:#11121a;--panel:#1b1d29;--panel2:#252839;--ink:#f5f4fb;--muted:#a8abc0;--line:#34374b;--accent:#a18cff;--danger:#ff8d9b;--shadow:0 10px 30px #0003}
+:root.light{color-scheme:light;--bg:#f4f5fb;--panel:#fff;--panel2:#eceefa;--ink:#24253a;--muted:#71758d;--line:#dfe1ee;--accent:#6954d8;--danger:#c83e59;--shadow:0 10px 28px #34365c12}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}
+button,input,select{font:inherit}button{cursor:pointer}.shell{max-width:1100px;margin:auto;padding:env(safe-area-inset-top) 16px env(safe-area-inset-bottom);min-height:100dvh}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:20px 0 16px}.brand{display:flex;gap:11px;align-items:center}.logo{width:44px;height:44px;border-radius:15px;background:var(--accent);display:grid;place-items:center;color:white;font-size:23px}.brand h1{font-size:21px;line-height:1.1;margin:0}.muted{color:var(--muted);font-size:12px}.actions{display:flex;gap:7px;flex-wrap:wrap}.btn,.icon{border:1px solid var(--line);background:var(--panel2);color:var(--ink);border-radius:12px;padding:10px 12px}.primary{background:var(--accent);color:#fff;border-color:transparent;font-weight:650}.danger{color:var(--danger)}.searchrow{display:flex;gap:9px;margin:4px 0 13px}.searchrow input,.select{min-width:0;background:var(--panel);border:1px solid var(--line);color:var(--ink);padding:12px 14px;border-radius:13px;outline:none}.searchrow input{flex:1}.toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:15px;flex-wrap:wrap}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;padding-bottom:100px}.card{background:var(--panel);border:1px solid var(--line);border-radius:17px;padding:15px;min-height:165px;display:flex;flex-direction:column;gap:9px;position:relative;overflow:hidden;box-shadow:var(--shadow);cursor:pointer}.card:before{content:"";height:4px;position:absolute;inset:0 0 auto;background:var(--c,var(--accent))}.card h3{margin:3px 0 0;font-size:16px;overflow-wrap:anywhere}.snippet{color:var(--muted);font-size:13px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow-wrap:anywhere;flex:1}.snippet img{display:none}.cardfoot{display:flex;justify-content:space-between;gap:8px;color:var(--muted);font-size:11px}.pill{background:var(--panel2);padding:3px 8px;border-radius:30px}.empty{grid-column:1/-1;text-align:center;padding:60px 15px;color:var(--muted)}.fab{position:fixed;right:max(22px,calc((100vw - 1100px)/2 + 22px));bottom:max(22px,env(safe-area-inset-bottom));width:60px;height:60px;border:0;border-radius:20px;background:var(--accent);color:white;font-size:30px;box-shadow:0 8px 25px #0005}
+.overlay{display:none;position:fixed;inset:0;background:#0009;z-index:5;align-items:flex-end;justify-content:center;padding:10px}.overlay.show{display:flex}.editor{width:min(100%,800px);max-height:96dvh;overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:16px;box-shadow:var(--shadow)}.edithead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}.edithead h2{font-size:18px;margin:0}.field{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:12px;color:var(--ink);padding:12px 13px;margin:5px 0 10px;outline:none}.field:focus,.searchrow input:focus{border-color:var(--accent)}#title{font-size:18px;font-weight:650}.editor-tools{display:flex;gap:7px;flex-wrap:wrap;margin:0 0 8px}.editor-tools button{padding:8px 11px;border-radius:10px;background:var(--panel2);border:1px solid var(--line);color:var(--ink)}#content{min-height:36dvh;background:var(--bg);border:1px solid var(--line);border-radius:13px;padding:14px;outline:none;line-height:1.65;overflow-wrap:anywhere}#content:empty:before{content:attr(data-placeholder);color:var(--muted)}#content img{max-width:100%;height:auto;border-radius:10px}#content ul,#content ol{padding-left:25px}.editbottom{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:12px}.editbottom .delete{margin-left:auto}.colors{display:flex;gap:9px;align-items:center;margin:6px 0}.swatch{width:24px;height:24px;border-radius:50%;border:0}.swatch.sel{outline:2px solid var(--ink);outline-offset:2px}.hint{font-size:11px;color:var(--muted);margin:10px 2px 0}.toast{position:fixed;z-index:20;bottom:90px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--bg);border-radius:12px;padding:10px 15px;display:none;max-width:90%;text-align:center}.install{display:none}.install.show{display:inline-block}
+@media(min-width:700px){.overlay{align-items:center}.editor{max-height:90dvh}#content{min-height:300px}}
+</style>
+</head>
+<body>
+<div class="shell">
+<header>
+ <div class="brand"><div class="logo">✎</div><div><h1>NoteNest</h1><div class="muted">Your notes, your space</div></div></div>
+ <div class="actions">
+  <button class="btn install" id="installBtn">Install app</button>
+  <button class="icon" id="themeBtn" aria-label="Toggle theme">☀️</button>
+  <button class="icon" id="exportBtn" title="Backup notes">↧</button>
+  <button class="icon" id="importBtn" title="Restore backup">↥</button>
+  <input type="file" id="importFile" accept=".json,application/json" hidden>
+ </div>
+</header>
+<div class="searchrow"><input id="search" type="search" placeholder="Search notes, folders…"><select id="folderFilter" class="select"><option value="">All folders</option></select></div>
+<div class="toolbar"><span class="muted" id="count">0 notes</span><button class="btn primary" id="newBtn">＋ New note</button></div>
+<main class="grid" id="grid"></main>
+<p class="hint">Autosaves on this device. Export a backup regularly and upload it to Google Drive to keep a safe copy.</p>
+</div>
+<button class="fab" id="fab" aria-label="New note">＋</button>
+<div class="overlay" id="overlay">
+<section class="editor" role="dialog" aria-modal="true" aria-labelledby="editTitle">
+ <div class="edithead"><h2 id="editTitle">New note</h2><button class="icon" id="closeBtn">✕</button></div>
+ <input class="field" id="title" maxlength="140" placeholder="Note title">
+ <input class="field" id="folder" maxlength="50" placeholder="Folder / subject (optional)">
+ <div class="editor-tools" aria-label="Formatting tools">
+  <button data-cmd="bold"><b>B</b></button><button data-cmd="italic"><i>I</i></button><button data-cmd="underline"><u>U</u></button>
+  <button data-cmd="insertUnorderedList">• List</button><button data-cmd="insertOrderedList">1. List</button>
+  <button id="imageBtn">▧ Add image</button><input type="file" id="imageFile" accept="image/*" hidden>
+  <button id="pdfBtn">PDF / Print</button>
+ </div>
+ <div id="content" contenteditable="true" spellcheck="true" data-placeholder="Start writing your note…"></div>
+ <div class="colors"><span class="muted">Color</span>
+  <button class="swatch sel" data-color="#a18cff" style="background:#a18cff"></button><button class="swatch" data-color="#58b7a5" style="background:#58b7a5"></button><button class="swatch" data-color="#f0b45e" style="background:#f0b45e"></button><button class="swatch" data-color="#e879a5" style="background:#e879a5"></button><button class="swatch" data-color="#65a8e8" style="background:#65a8e8"></button>
+ </div>
+ <div class="editbottom"><button class="btn primary" id="saveBtn">Save note</button><button class="btn" id="shareBtn">Share note</button><button class="btn danger delete" id="deleteBtn" style="display:none">Delete</button></div>
+ <p class="hint">Images are stored with the note on this device. PDF / Print opens your browser's print dialog; choose “Save as PDF”.</p>
+</section>
+</div>
+<div class="toast" id="toast" role="status"></div>
+<script>
+(()=>{'use strict';
+const DB='notenest_db',STORE='notes',THEME='notenest_theme';let db,notes=[],editing=null,color='#a18cff',installPrompt=null;
+const $=id=>document.getElementById(id),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function toast(s){let t=$('toast');t.textContent=s;t.style.display='block';clearTimeout(toast.timer);toast.timer=setTimeout(()=>t.style.display='none',2600)}
+function openDB(){return new Promise((resolve,reject)=>{let r=indexedDB.open(DB,1);r.onupgradeneeded=()=>{if(!r.result.objectStoreNames.contains(STORE))r.result.createObjectStore(STORE,{keyPath:'id'})};r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error)})}
+function all(){return new Promise((resolve,reject)=>{let r=db.transaction(STORE).objectStore(STORE).getAll();r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error)})}
+function put(n){return new Promise((resolve,reject)=>{let r=db.transaction(STORE,'readwrite').objectStore(STORE).put(n);r.onsuccess=resolve;r.onerror=()=>reject(r.error)})}
+function del(id){return new Promise((resolve,reject)=>{let r=db.transaction(STORE,'readwrite').objectStore(STORE).delete(id);r.onsuccess=resolve;r.onerror=()=>reject(r.error)})}
+function uid(){return crypto.randomUUID?crypto.randomUUID():String(Date.now())+Math.random()}
+function date(ts){return new Date(ts).toLocaleDateString(undefined,{day:'numeric',month:'short',year:'numeric'})}
+async function refresh(){notes=await all();render()}
+function render(){
+ let q=$('search').value.toLowerCase().trim(),f=$('folderFilter').value;
+ let folders=[...new Set(notes.map(n=>n.folder).filter(Boolean))].sort();
+ $('folderFilter').innerHTML='<option value="">All folders</option>'+folders.map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join('');
+ $('folderFilter').value=folders.includes(f)?f:'';
+ let list=notes.filter(n=>(!f||n.folder===f)&&(`${n.title} ${n.folder} ${n.text}`).toLowerCase().includes(q)).sort((a,b)=>b.updated-a.updated);
+ $('count').textContent=`${list.length} ${list.length===1?'note':'notes'}`;
+ $('grid').innerHTML=list.length?list.map(n=>`<article class="card" data-id="${esc(n.id)}" style="--c:${esc(n.color)}" tabindex="0"><h3>${esc(n.title||'Untitled note')}</h3><div class="snippet">${esc((n.text||'').replace(/\s+/g,' ').slice(0,230))||'No text yet'}${n.images?'  ·  ▧':''}</div><div class="cardfoot"><span class="pill">${esc(n.folder||'Unfiled')}</span><span>${date(n.updated)}</span></div></article>`).join(''):'<div class="empty"><div style="font-size:42px">📝</div><b>'+(q||f?'No matching notes':'Your notes start here')+'</b><div>'+(q||f?'Try another search or folder.':'Tap New note to write your first note.')+'</div></div>';
+ $('grid').querySelectorAll('.card').forEach(el=>{let fn=()=>edit(el.dataset.id);el.onclick=fn;el.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();fn()}}});
+}
+function open(){ $('overlay').classList.add('show');setTimeout(()=>$('title').focus(),60)}
+function close(){ $('overlay').classList.remove('show');editing=null}
+async function edit(id){let n=id?notes.find(x=>x.id===id):null;editing=n?.id||null;color=n?.color||'#a18cff';$('editTitle').textContent=n?'Edit note':'New note';$('title').value=n?.title||'';$('folder').value=n?.folder||'';$('content').innerHTML=n?.html||'';$('deleteBtn').style.display=n?'inline-block':'none';document.querySelectorAll('.swatch').forEach(b=>b.classList.toggle('sel',b.dataset.color===color));open()}
+async function save(){let title=$('title').value.trim(),html=$('content').innerHTML,text=$('content').innerText.trim(),folder=$('folder').value.trim();if(!title&&!text&&!$('content').querySelector('img')){toast('Add a title, text or image first.');return}
+let old=notes.find(n=>n.id===editing),n={id:editing||uid(),title,folder,html,text,color,created:old?.created||Date.now(),updated:Date.now(),images:$('content').querySelectorAll('img').length};try{await put(n);await refresh();close();toast('Note saved on this device.')}catch{toast('Could not save. Device storage may be full.')}}
+function exportAll(){let data={app:'NoteNest',version:2,exportedAt:new Date().toISOString(),notes};let blob=new Blob([JSON.stringify(data)],{type:'application/json'}),a=document.createElement('a'),u=URL.createObjectURL(blob);a.href=u;a.download='notenest-backup-'+new Date().toISOString().slice(0,10)+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(u),1000);toast('Backup exported. Upload the JSON file to Google Drive.')}
+async function importAll(file){try{let data=JSON.parse(await file.text()),arr=Array.isArray(data)?data:data.notes;if(!Array.isArray(arr))throw 0;for(let x of arr){if(x?.id)await put({id:String(x.id),title:String(x.title||''),folder:String(x.folder||''),html:String(x.html||''),text:String(x.text||''),color:String(x.color||'#a18cff'),created:Number(x.created)||Date.now(),updated:Number(x.updated)||Date.now(),images:Number(x.images)||0})}await refresh();toast(`Restored ${arr.length} notes.`)}catch{toast('Could not read that backup file.')}}
+function printNote(){let w=window.open('','_blank');if(!w){toast('Allow pop-ups to print this note.');return}let title=esc($('title').value||'Note');w.document.write(`<!doctype html><html><head><title>${title}</title><meta name="viewport" content="width=device-width,initial-scale=1"><style>body{font:16px/1.6 Arial,sans-serif;max-width:800px;margin:40px auto;padding:0 20px;color:#222}img{max-width:100%;height:auto}h1{font-size:26px}</style></head><body><h1>${title}</h1>${$('content').innerHTML}</body></html>`);w.document.close();w.focus();setTimeout(()=>w.print(),400)}
+async function share(){let title=$('title').value.trim()||'Note',txt=title+'\n\n'+$('content').innerText;try{if(navigator.share){await navigator.share({title,text:txt});return}}catch(e){if(e.name==='AbortError')return}try{await navigator.clipboard.writeText(txt);toast('Text copied. Paste it into Drive or Docs.')}catch{toast('Use Backup ↧ to export all notes.')}}
+$('newBtn').onclick=$('fab').onclick=()=>edit();$('closeBtn').onclick=close;$('saveBtn').onclick=save;$('exportBtn').onclick=exportAll;$('importBtn').onclick=()=>$('importFile').click();$('importFile').onchange=e=>{if(e.target.files[0])importAll(e.target.files[0]);e.target.value=''};
+$('search').oninput=render;$('folderFilter').onchange=render;$('deleteBtn').onclick=async()=>{if(editing&&confirm('Delete this note?')){await del(editing);await refresh();close();toast('Note deleted.')}};
+$('content').addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='s'){e.preventDefault();save()}});
+document.querySelectorAll('[data-cmd]').forEach(b=>b.onclick=()=>{document.execCommand(b.dataset.cmd,false,null);$('content').focus()});
+document.querySelectorAll('.swatch').forEach(b=>b.onclick=()=>{color=b.dataset.color;document.querySelectorAll('.swatch').forEach(x=>x.classList.toggle('sel',x===b))});
+$('imageBtn').onclick=()=>$('imageFile').click();$('imageFile').onchange=e=>{let f=e.target.files[0];if(!f)return;if(!f.type.startsWith('image/')){toast('Choose an image file.');return}if(f.size>5*1024*1024){toast('Please choose an image under 5 MB.');return}let r=new FileReader();r.onload=()=>{let img=document.createElement('img');img.src=r.result;img.alt=f.name;$('content').append(img);$('content').focus()};r.readAsDataURL(f);e.target.value=''};
+$('pdfBtn').onclick=printNote;$('shareBtn').onclick=share;$('overlay').onclick=e=>{if(e.target===$('overlay'))close()};
+$('themeBtn').onclick=()=>{let light=!document.documentElement.classList.contains('light');document.documentElement.classList.toggle('light',light);localStorage.setItem(THEME,light?'light':'dark');$('themeBtn').textContent=light?'🌙':'☀️'};
+if(localStorage.getItem(THEME)==='light'){document.documentElement.classList.add('light');$('themeBtn').textContent='🌙'}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();installPrompt=e;$('installBtn').classList.add('show')});
+$('installBtn').onclick=async()=>{if(!installPrompt){toast('Use Chrome menu → Add to Home screen.');return}installPrompt.prompt();await installPrompt.userChoice;installPrompt=null;$('installBtn').classList.remove('show')};
+if('serviceWorker'in navigator && location.protocol.startsWith('http'))navigator.serviceWorker.register('./sw.js').catch(()=>{});
+(async()=>{try{db=await openDB();await refresh()}catch{toast('This browser does not support local note storage.')}})();
+})();
+</script>
+</body>
+</html>
